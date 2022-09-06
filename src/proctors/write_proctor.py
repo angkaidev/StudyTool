@@ -38,30 +38,43 @@ class WriteProctor:
 
             answered = False
             while not answered:
-                answer = utils.prompt(f"Definition: {entry.definition}\nTerm: ")
+                answer = input(f"Definition: {entry.definition}\nTerm: ")
                 if answer in ["e", "exit"]:
                     self.stop()
+                    break
                 if answer in ["h", "help"]:
                     print("Input the corresponding term for the given definition")
                     print("\tExit (e): Exit out of write mode")
                     print("\tOverride (o): Upon getting an answer wrong, this will override that judgement")
+                    break
                 else:
                     answered = True
 
-            if answer == entry.term:
-                print(utils.correct("Correct!"))
-            else:
-                correct_msg = "Correct Answer: "
-                user_msg = "Your Answer:    "
+            if answered:
+                if answer == entry.term:
+                    print(utils.correct("Correct!"))
+                else:
+                    correct_msg = "Correct Answer:  "
+                    user_msg = "Your Answer:     "
 
-                for index in range(max(len(answer), len(entry.term))):
-                    color_function = utils.incorrect
-                    if index < len(answer) and index < len(entry.term) and answer[index] == entry.term[index]:
-                        color_function = utils.correct
-                    if index < len(entry.term):
-                        correct_msg = f"{correct_msg}{color_function(entry.term[index])}"
-                    if index < len(answer):
-                        user_msg = f"{user_msg}{color_function(answer[index])}"
+                    for index in range(max(len(answer), len(entry.term))):
+                        color_function = utils.incorrect
+                        if index < len(answer) and index < len(entry.term) and answer[index] == entry.term[index]:
+                            color_function = utils.correct
+                        if index < len(entry.term):
+                            correct_msg = f"{correct_msg}{color_function(entry.term[index])}"
+                        if index < len(answer):
+                            user_msg = f"{user_msg}{color_function(answer[index])}"
+
+                    print(correct_msg)
+                    print(user_msg)
+                    
+                    correct = False
+                    while not correct:
+                        answer = input("Type the Answer: ")
+                        if answer == entry.term:
+                            correct = True
+                        if answer in ["e", "exit"]:
+                            self.stop()
+                            break
                 
-                print(correct_msg)
-                print(user_msg)
