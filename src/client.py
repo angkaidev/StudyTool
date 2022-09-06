@@ -116,5 +116,6 @@ class Client:
             self.action(self.prompt())
 
 if __name__ == "__main__":
+    os.system("stty erase '^H'")
     client = Client()
     client.main()

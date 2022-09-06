@@ -10,18 +10,32 @@ class WriteProctor:
         self.set = set_data
 
         self.entry_pool: list[data.Entry] = []
+        self.incorrect: list[data.Entry] = []
 
         self.run = False
     
     def start(self):
         self.run = True
-        self.entry_pool = copy.deepcopy(self.set.entries)
+        self.new_round()
 
     def stop(self):
         self.run = False
+
+    def new_round(self) -> None:
+        set_size = len(self.set.entries)
+        if len(self.incorrect) == 0:
+            print(f"Starting Set | Terms: {set_size}")
+            self.entry_pool = copy.deepcopy(self.set.entries)
+        else:
+            incorrect = len(self.incorrect)
+            correct = set_size - incorrect
+            print(f"Starting New Round | Correct: {correct} | Incorrect: {incorrect}")
+            self.entry_pool = copy.deepcopy(self.incorrect)
+            self.incorrect: list[data.Entry] = []
     
     def get_entry(self) -> data.Entry:
         if len(self.entry_pool) == 0:
+            self.new_round()
             self.entry_pool = copy.deepcopy(self.set.entries)
         
         index = int(random.random() * len(self.entry_pool))
@@ -54,6 +68,7 @@ class WriteProctor:
                 if answer == entry.term:
                     print(utils.correct("Correct!"))
                 else:
+                    self.incorrect.append(entry)
                     correct_msg = "Correct Answer:  "
                     user_msg = "Your Answer:     "
 
