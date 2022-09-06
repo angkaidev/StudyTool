@@ -46,14 +46,17 @@ class Client:
         self.sets: list[SetInfo] = []
 
         data_dir = f"{os.path.dirname(os.path.realpath(__file__))[:-3]}data/"
-        for category in os.listdir(data_dir):
-            directory_path = f"{data_dir}{category}/"
-            for file in os.listdir(directory_path):
-                parts = file.split(".")
-                name = self.get_name(f"{directory_path}{file}")
-                extension = parts[1]
-                if extension == "set":
-                    self.sets.append(SetInfo(name, directory_path, parts[0]))
+        try:
+            for category in os.listdir(data_dir):
+                directory_path = f"{data_dir}{category}/"
+                for file in os.listdir(directory_path):
+                    parts = file.split(".")
+                    name = self.get_name(f"{directory_path}{file}")
+                    extension = parts[1]
+                    if extension == "set":
+                        self.sets.append(SetInfo(name, directory_path, parts[0]))
+        except NotADirectoryError:
+            pass
     
     def print_sets(self) -> None:
         count = 0
@@ -112,5 +115,6 @@ class Client:
         while(self.run):
             self.action(self.prompt())
 
-client = Client()
-client.main()
+if __name__ == "__main__":
+    client = Client()
+    client.main()
