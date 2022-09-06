@@ -30,13 +30,14 @@ class WriteProctor:
             incorrect = len(self.incorrect)
             correct = set_size - incorrect
             print(f"Starting New Round | Correct: {correct} | Incorrect: {incorrect}")
+            for entry in self.incorrect:
+                utils.incorrect(entry)
             self.entry_pool = copy.deepcopy(self.incorrect)
             self.incorrect: list[data.Entry] = []
     
     def get_entry(self) -> data.Entry:
         if len(self.entry_pool) == 0:
             self.new_round()
-            self.entry_pool = copy.deepcopy(self.set.entries)
         
         index = int(random.random() * len(self.entry_pool))
         entry = self.entry_pool[index]
